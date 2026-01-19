@@ -1,0 +1,16 @@
+{
+  "name": "location-based-ar",
+  "version": "1.0.0",
+  "description": "Location-based AR application",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": ["ar", "location-based", "aframe"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

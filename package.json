@@ -5,9 +5,15 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:dev": "echo 'Building for development...' && node server.js",
+    "vercel-build": "echo 'Vercel build complete'"
   },
-  "keywords": ["ar", "location-based", "aframe"],
+  "keywords": [
+    "ar",
+    "location-based",
+    "aframe"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

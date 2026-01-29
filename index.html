@@ -13,6 +13,9 @@
     <!-- Gesture detector for touch controls -->
     <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
 
+    <!-- Howler.js for audio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js" integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!-- style for the loader -->
     <style>
         /* Ensure a-scene fits the viewport */
@@ -70,6 +73,7 @@
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 9999;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -175,6 +179,166 @@
             transform: scale(0.95);
             background: rgba(76, 175, 80, 1);
         }
+
+        /* Play Sound Button */
+        .play-sound-container {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10002;
+            display: none;
+        }
+
+        .play-sound-container.show {
+            display: block;
+        }
+
+        .play-sound-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .play-sound-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+        }
+
+        .play-sound-btn:active {
+            transform: scale(0.95);
+            animation: none;
+        }
+
+        .play-sound-btn .icon {
+            font-size: 32px;
+        }
+
+        .play-sound-btn.maracas {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+        }
+
+        .play-sound-btn.maracas:hover {
+            box-shadow: 0 12px 35px rgba(245, 87, 108, 0.7);
+        }
+
+        .play-sound-btn.trumpet {
+            background: linear-gradient(135deg, #ffd89b 0%, #f3a36b 100%);
+            color: #333;
+            box-shadow: 0 8px 25px rgba(243, 163, 107, 0.5);
+        }
+
+        .play-sound-btn.trumpet:hover {
+            box-shadow: 0 12px 35px rgba(243, 163, 107, 0.7);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .play-sound-btn.playing {
+            animation: pulse-playing 0.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-playing {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Position Control Panel */
+        .position-control-panel {
+            position: fixed;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10002;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .position-control-panel.show {
+            display: flex;
+        }
+
+        .position-control-panel h4 {
+            color: #FFD700;
+            font-size: 12px;
+            margin: 0 0 8px 0;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .axis-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .axis-label {
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            width: 20px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .axis-label.x { color: #ff6b6b; }
+        .axis-label.y { color: #4ecdc4; }
+        .axis-label.z { color: #ffe66d; }
+
+        .pos-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pos-btn:active {
+            transform: scale(0.9);
+        }
+
+        .pos-btn.minus {
+            background: linear-gradient(135deg, #fc5c65 0%, #eb3b5a 100%);
+            color: white;
+        }
+
+        .pos-btn.plus {
+            background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
+            color: white;
+        }
+
+        .pos-btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 
@@ -190,45 +354,59 @@
         <strong>📸 Instructions:</strong><br>
         1. Point camera at your QR image<br>
         2. Keep the image in full view<br>
-        3. Maracas will appear! 🎸<br>
-        4. Use buttons to adjust position<br>
+        3. Instruments will appear! 🎸<br>
         <br>
+
         <span id="status">⏳ Waiting for marker...</span>
-    </div>
-
-    <!-- Coordinates Display Panel -->
-    <div class="coordinates-panel" id="coordPanel">
-        <h3>📊 Model Coordinates</h3>
-        <div class="coord-item">
-            <span class="coord-label">Position X:</span>
-            <span class="coord-value" id="posX">0</span>
-        </div>
-        <div class="coord-item">
-            <span class="coord-label">Position Y:</span>
-            <span class="coord-value" id="posY">0</span>
-        </div>
-        <div class="coord-item">
-            <span class="coord-label">Position Z:</span>
-            <span class="coord-value" id="posZ">0</span>
-        </div>
-        <div class="coord-item">
-            <span class="coord-label">Scale:</span>
-            <span class="coord-value" id="scaleVal">0</span>
-        </div>
-        <div class="coord-item">
-            <span class="coord-label">Rotation X:</span>
-            <span class="coord-value" id="rotX">0</span>
+        
+        <!-- Model Position Display -->
+        <div id="modelPositionDisplay" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">
+            <strong style="color: #FFD700;">📍 Model Position:</strong><br>
+            <span style="font-family: 'Courier New', monospace; font-size: 11px;">
+                <span style="color: #4CAF50;">X:</span> <span id="posX" style="color: #00ff00;">0.00</span> | 
+                <span style="color: #4CAF50;">Y:</span> <span id="posY" style="color: #00ff00;">0.00</span> | 
+                <span style="color: #4CAF50;">Z:</span> <span id="posZ" style="color: #00ff00;">0.00</span>
+            </span><br>
+            <span style="font-family: 'Courier New', monospace; font-size: 11px;">
+                <span style="color: #ff9800;">Scale:</span> <span id="scaleVal" style="color: #ffeb3b;">1.00</span> | 
+                <span style="color: #ff9800;">Rot:</span> <span id="rotVal" style="color: #ffeb3b;">0°</span>
+            </span>
         </div>
     </div>
 
-    <!-- Control Buttons -->
-    <div class="control-buttons">
-        <button class="control-btn" id="btnScaleUp">🔍 Scale +</button>
-        <button class="control-btn" id="btnScaleDown">🔍 Scale -</button>
-        <button class="control-btn" id="btnMoveUp">⬆️ Y+</button>
-        <button class="control-btn" id="btnMoveDown">⬇️ Y-</button>
-        <button class="control-btn" id="btnMoveForward">➡️ Z+</button>
-        <button class="control-btn" id="btnMoveBack">⬅️ Z-</button>
+    <!-- Play Sound Buttons -->
+    <div class="play-sound-container" id="maracasSoundBtn">
+        <button class="play-sound-btn maracas" id="maracasBtn">
+            <span class="icon">🎶</span>
+            <span>Tap to Shake!</span>
+        </button>
+    </div>
+
+    <div class="play-sound-container" id="trumpetSoundBtn">
+        <button class="play-sound-btn trumpet" id="trumpetBtn">
+            <span class="icon">🎺</span>
+            <span>Hold to Blow!</span>
+        </button>
+    </div>
+
+    <!-- Position Control Panel -->
+    <div class="position-control-panel" id="positionControlPanel">
+        <h4>📐 Adjust Position</h4>
+        <div class="axis-control">
+            <span class="axis-label x">X</span>
+            <button class="pos-btn minus" onclick="adjustPosition('x', -10)">−</button>
+            <button class="pos-btn plus" onclick="adjustPosition('x', 10)">+</button>
+        </div>
+        <div class="axis-control">
+            <span class="axis-label y">Y</span>
+            <button class="pos-btn minus" onclick="adjustPosition('y', -10)">−</button>
+            <button class="pos-btn plus" onclick="adjustPosition('y', 10)">+</button>
+        </div>
+        <div class="axis-control">
+            <span class="axis-label z">Z</span>
+            <button class="pos-btn minus" onclick="adjustPosition('z', -10)">−</button>
+            <button class="pos-btn plus" onclick="adjustPosition('z', 10)">+</button>
+        </div>
     </div>
 
     <!-- a-frame scene -->
@@ -251,7 +429,7 @@
             smoothTolerance=".01"
             smoothThreshold="5"
         >
-            <!-- Dragonite 3D Model -->
+            <!-- Maracas 3D Model -->
             <a-entity
                 id="maracasModel"
                 gltf-model="/assets/models/maracas/scene.gltf"
@@ -259,7 +437,7 @@
                 position="50 -50 90"
                 rotation="-90 0 0"
                 animation-mixer
-                gesture-handler
+                gesture-handler="instrumentType: maracas"
             >
             </a-entity>
 
@@ -283,44 +461,425 @@
             >
             </a-cylinder>
         </a-nft>
+
+        <a-nft
+            markerhandler
+            type="nft"
+            url="/assets/images/trumpet/trumpet"
+            smooth="true"
+            smoothCount="10"
+            smoothTolerance=".01"
+            smoothThreshold="5"
+        >
+            <!-- Trumpet 3D Model -->
+            <a-entity
+                id="trumpetModel"
+                gltf-model="/assets/models/trumpet/scene.gltf"
+                scale="45 45 45"
+                position="100 200 -80"
+                rotation="-98 0 0"
+                animation-mixer
+                gesture-handler="instrumentType: trumpet"
+            >
+            </a-entity>
+
+            <!-- Text Label -->
+            <a-text
+                value="TRUMPET"
+                align="center"
+                color="#FFD700"
+                scale="1 1 1"
+                position="0 120 100"
+            >
+            </a-text>
+
+            <!-- Optional: Add a platform/base -->
+            <a-cylinder
+                color="#4CAF50"
+                height="3"
+                radius="30"
+                position="0 0 0"
+                opacity="0.7"
+            >
+            </a-cylinder>
+        </a-nft>
         
         <!-- static camera that moves according to the device movements -->
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
+        // ============================================
+        // Howler.js Audio Setup
+        // ============================================
+        
+        // Initialize Howler sounds
+        const sounds = {
+            maracas: new Howl({
+                src: ['/assets/sounds/maracas/maracas.mp3'],
+                volume: 1.0,
+                preload: true,
+                onload: () => console.log('🎶 Maracas sound loaded'),
+                onloaderror: (id, err) => console.error('Maracas load error:', err)
+            }),
+            trumpet: new Howl({
+                src: ['/assets/sounds/trumpet/trumpet.mp3'],
+                volume: 1.0,
+                loop: true,  // Enable looping for trumpet
+                preload: true,
+                onload: () => console.log('🎺 Trumpet sound loaded'),
+                onloaderror: (id, err) => console.error('Trumpet load error:', err)
+            })
+        };
+        
+        if (Howler.ctx && Howler.ctx.state === 'suspended') {
+            Howler.ctx.resume().then(() => {
+                console.log('🔊 Howler AudioContext resumed');
+            });
+        }
+        
+        // Play a silent/short sound to fully unlock on iOS
+        sounds.maracas.volume(0);
+        sounds.maracas.play();
+        setTimeout(() => {
+            sounds.maracas.stop();
+            sounds.maracas.volume(1.0);
+        }, 100);
+        
+        sounds.trumpet.volume(0);
+        sounds.trumpet.play();
+        setTimeout(() => {
+            sounds.trumpet.stop();
+            sounds.trumpet.volume(1.0);
+        }, 100);
+        
+        console.log('✅ Howler.js audio initialized!');
+
+        // Current active instrument and model
+        let activeInstrument = null;
+        let currentActiveModel = null;
+        let trumpetHoldTimer = null;
+        let isTrumpetHolding = false;
+
+        // ============================================
+        // Position Adjustment Functions
+        // ============================================
+        function adjustPosition(axis, step) {
+            if (!currentActiveModel) {
+                console.log('⚠️ No active model to adjust');
+                return;
+            }
+            
+            const model = document.getElementById(currentActiveModel);
+            if (!model) return;
+            
+            const position = model.getAttribute('position');
+            const newPosition = { ...position };
+            
+            // Adjust the specified axis
+            newPosition[axis] += step;
+            
+            model.setAttribute('position', newPosition);
+            console.log(`📐 ${currentActiveModel} position adjusted: ${axis.toUpperCase()} ${step > 0 ? '+' : ''}${step} → ${newPosition[axis].toFixed(2)}`);
+        }
+
+        // Show position control panel
+        function showPositionControls() {
+            const panel = document.getElementById('positionControlPanel');
+            if (panel) {
+                panel.classList.add('show');
+            }
+        }
+
+        // Hide position control panel
+        function hidePositionControls() {
+            const panel = document.getElementById('positionControlPanel');
+            if (panel) {
+                panel.classList.remove('show');
+            }
+        }
+
+        // ============================================
+        // Maracas: Tap to shake (sound on touchstart/mousedown)
+        // ============================================
+        function playMaracas() {
+            // Play sound
+            sounds.maracas.stop();
+            sounds.maracas.play();
+            console.log('🎶 Maracas shake!');
+            
+            // Animate button
+            const btn = document.getElementById('maracasBtn');
+            if (btn) {
+                btn.classList.add('playing');
+                sounds.maracas.once('end', () => {
+                    btn.classList.remove('playing');
+                });
+            }
+            
+            // Animate 3D model - shake/rotate
+            const model = document.getElementById('maracasModel');
+            if (model) {
+                shakeMaracasModel(model);
+            }
+        }
+
+        // Shake animation for maracas 3D model
+        function shakeMaracasModel(model) {
+            const originalRotation = model.getAttribute('rotation');
+            let shakeCount = 0;
+            const maxShakes = 6;
+            const shakeAngle = 15;
+            
+            function shake() {
+                if (shakeCount >= maxShakes) {
+                    // Return to original rotation
+                    model.setAttribute('rotation', originalRotation);
+                    return;
+                }
+                
+                const direction = shakeCount % 2 === 0 ? shakeAngle : -shakeAngle;
+                model.setAttribute('rotation', {
+                    x: originalRotation.x,
+                    y: originalRotation.y + direction,
+                    z: originalRotation.z + direction
+                });
+                
+                shakeCount++;
+                setTimeout(shake, 80);
+            }
+            
+            shake();
+        }
+
+        // ============================================
+        // Trumpet: Hold to blow (sound starts on touchstart and loops)
+        // ============================================
+        let trumpetScaleAnimation = null;
+        let trumpetOriginalScale = null;
+        
+        function startTrumpetHold() {
+            isTrumpetHolding = true;
+            console.log('🎺 Trumpet blowing started!');
+            
+            // Play sound immediately and loop
+            sounds.trumpet.stop();
+            sounds.trumpet.play();
+            
+            // Visual feedback on button
+            const btn = document.getElementById('trumpetBtn');
+            if (btn) {
+                btn.style.transform = 'scale(0.9)';
+                btn.style.opacity = '0.7';
+                btn.classList.add('playing');
+            }
+            
+            // Start looping scale animation on 3D model
+            const model = document.getElementById('trumpetModel');
+            if (model) {
+                trumpetOriginalScale = { ...model.getAttribute('scale') };
+                startTrumpetScaleLoop(model);
+            }
+        }
+
+        function releaseTrumpet() {
+            if (!isTrumpetHolding) return;
+            isTrumpetHolding = false;
+            
+            console.log('🎺 Trumpet released - sound stopped');
+            
+            // Stop sound on release
+            sounds.trumpet.stop();
+            
+            // Reset button
+            const btn = document.getElementById('trumpetBtn');
+            if (btn) {
+                btn.style.transform = '';
+                btn.style.opacity = '';
+                btn.classList.remove('playing');
+            }
+            
+            // Stop animation and reset 3D model
+            if (trumpetScaleAnimation) {
+                clearInterval(trumpetScaleAnimation);
+                trumpetScaleAnimation = null;
+            }
+            
+            const model = document.getElementById('trumpetModel');
+            if (model && trumpetOriginalScale) {
+                model.setAttribute('scale', trumpetOriginalScale);
+            }
+        }
+
+        // Looping scale animation for trumpet while holding/blowing
+        function startTrumpetScaleLoop(model) {
+            let scaleUp = true;
+            const minScale = 0.9;
+            const maxScale = 1.15;
+            
+            trumpetScaleAnimation = setInterval(() => {
+                if (!isTrumpetHolding) {
+                    clearInterval(trumpetScaleAnimation);
+                    trumpetScaleAnimation = null;
+                    if (trumpetOriginalScale) {
+                        model.setAttribute('scale', trumpetOriginalScale);
+                    }
+                    return;
+                }
+                
+                const scaleFactor = scaleUp ? maxScale : minScale;
+                model.setAttribute('scale', {
+                    x: trumpetOriginalScale.x * scaleFactor,
+                    y: trumpetOriginalScale.y * scaleFactor,
+                    z: trumpetOriginalScale.z * scaleFactor
+                });
+                scaleUp = !scaleUp;
+            }, 150);  // Faster animation for more dynamic effect
+        }
+
+        // ============================================
+        // Setup Button Event Listeners
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Maracas button - play on tap (touchstart/mousedown)
+            const maracasBtn = document.getElementById('maracasBtn');
+            if (maracasBtn) {
+                maracasBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    playMaracas();
+                });
+                maracasBtn.addEventListener('mousedown', playMaracas);
+            }
+            
+            // Trumpet button - play on release (touchend/mouseup)
+            const trumpetBtn = document.getElementById('trumpetBtn');
+            if (trumpetBtn) {
+                trumpetBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    startTrumpetHold();
+                });
+                trumpetBtn.addEventListener('mousedown', startTrumpetHold);
+                
+                trumpetBtn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    releaseTrumpet();
+                });
+                trumpetBtn.addEventListener('mouseup', releaseTrumpet);
+                trumpetBtn.addEventListener('mouseleave', () => {
+                    if (isTrumpetHolding) releaseTrumpet();
+                });
+            }
+        });
+
+        // Show/hide sound button based on instrument type
+        function showSoundButton(instrumentType) {
+            // Hide all buttons first
+            document.getElementById('maracasSoundBtn').classList.remove('show');
+            document.getElementById('trumpetSoundBtn').classList.remove('show');
+            
+            // Show the relevant button
+            const btnContainer = document.getElementById(`${instrumentType}SoundBtn`);
+            if (btnContainer) {
+                btnContainer.classList.add('show');
+            }
+            activeInstrument = instrumentType;
+        }
+
+        // Hide all sound buttons
+        function hideAllSoundButtons() {
+            document.getElementById('maracasSoundBtn').classList.remove('show');
+            document.getElementById('trumpetSoundBtn').classList.remove('show');
+            activeInstrument = null;
+            isTrumpetHolding = false;
+            
+            // Clear trumpet animation and reset model
+            if (trumpetScaleAnimation) {
+                clearInterval(trumpetScaleAnimation);
+                trumpetScaleAnimation = null;
+            }
+            
+            // Reset trumpet model to original scale
+            const trumpetModel = document.getElementById('trumpetModel');
+            if (trumpetModel && trumpetOriginalScale) {
+                trumpetModel.setAttribute('scale', trumpetOriginalScale);
+            }
+            
+            // Stop all sounds when marker is lost
+            sounds.maracas.stop();
+            sounds.trumpet.stop();
+        }
+
         // Register custom A-Frame component for marker handling
         AFRAME.registerComponent('markerhandler', {
             init: function() {
                 const marker = this.el;
+                const markerUrl = marker.getAttribute('url');
+                
+                // Determine instrument type from marker URL
+                let instrumentType = 'unknown';
+                if (markerUrl.includes('maracas')) {
+                    instrumentType = 'maracas';
+                } else if (markerUrl.includes('trumpet')) {
+                    instrumentType = 'trumpet';
+                }
+                
+                // Position tracking interval
+                let positionTrackingInterval = null;
                 
                 // Marker found event
                 marker.addEventListener('markerFound', () => {
-                    console.log('✅ Marker Found!');
+                    console.log(`✅ ${instrumentType.toUpperCase()} Marker Found!`);
                     
                     // Update status UI
                     const status = document.getElementById('status');
                     if (status) {
-                        status.innerHTML = '<span style="color: #4CAF50;">✅ Marker Found! Maracas is appearing...</span>';
+                        status.innerHTML = `<span style="color: #4CAF50;">✅ ${instrumentType.charAt(0).toUpperCase() + instrumentType.slice(1)} detected! Tap button to play sound</span>`;
                     }
                     
-                    // You can add custom actions here, for example:
-                    // - Play sound
-                    // - Trigger animation
-                    // - Show additional UI elements
-                    // - Track analytics
+                    // Show the play button for this instrument
+                    showSoundButton(instrumentType);
                     
-                    // Example: Get all entities in this marker
-                    const entities = marker.querySelectorAll('a-entity');
-                    entities.forEach(entity => {
-                        // You can manipulate entities here
-                        console.log('Entity found:', entity);
-                    });
+                    // Set current active model for position adjustment
+                    const modelId = instrumentType === 'maracas' ? 'maracasModel' : 'trumpetModel';
+                    currentActiveModel = modelId;
+                    
+                    // Show position control panel
+                    showPositionControls();
+                    
+                    // Show position display and start tracking
+                    const positionDisplay = document.getElementById('modelPositionDisplay');
+                    if (positionDisplay) {
+                        positionDisplay.style.display = 'block';
+                    }
+                    
+                    // Get the model element
+                    const model = document.getElementById(modelId);
+                    
+                    // Start tracking position
+                    if (model) {
+                        positionTrackingInterval = setInterval(() => {
+                            const position = model.getAttribute('position');
+                            const scale = model.getAttribute('scale');
+                            const rotation = model.getAttribute('rotation');
+                            
+                            if (position) {
+                                document.getElementById('posX').textContent = position.x.toFixed(2);
+                                document.getElementById('posY').textContent = position.y.toFixed(2);
+                                document.getElementById('posZ').textContent = position.z.toFixed(2);
+                            }
+                            if (scale) {
+                                document.getElementById('scaleVal').textContent = scale.x.toFixed(2);
+                            }
+                            if (rotation) {
+                                document.getElementById('rotVal').textContent = `${rotation.x.toFixed(0)}°`;
+                            }
+                        }, 100);
+                    }
                 });
                 
                 // Marker lost event
                 marker.addEventListener('markerLost', () => {
-                    console.log('⚠️ Marker Lost');
+                    console.log(`⚠️ ${instrumentType.toUpperCase()} Marker Lost`);
                     
                     // Update status UI
                     const status = document.getElementById('status');
@@ -328,10 +887,25 @@
                         status.innerHTML = '<span style="color: #ff9800;">⚠️ Marker Lost - Point camera back at the card</span>';
                     }
                     
-                    // You can add custom actions here, for example:
-                    // - Pause animations
-                    // - Stop sounds
-                    // - Hide UI elements
+                    // Hide the play button
+                    hideAllSoundButtons();
+                    
+                    // Clear current active model
+                    currentActiveModel = null;
+                    
+                    // Hide position control panel
+                    hidePositionControls();
+                    
+                    // Hide position display and stop tracking
+                    const positionDisplay = document.getElementById('modelPositionDisplay');
+                    if (positionDisplay) {
+                        positionDisplay.style.display = 'none';
+                    }
+                    
+                    if (positionTrackingInterval) {
+                        clearInterval(positionTrackingInterval);
+                        positionTrackingInterval = null;
+                    }
                 });
             }
         });
@@ -503,13 +1077,14 @@
             updateCoordinateDisplay();
         }
 
-        // Add gesture controls component (pinch to zoom)
+        // Add gesture controls component (pinch to zoom) with sound support
         AFRAME.registerComponent('gesture-handler', {
             schema: {
                 enabled: { default: true },
                 rotationFactor: { default: 5 },
                 minScale: { default: 0.01 },
                 maxScale: { default: 10 },
+                instrumentType: { default: '' },
             },
             init: function () {
                 this.handleScale = this.handleScale.bind(this);
@@ -519,12 +1094,18 @@
                 this.initialScale = this.el.object3D.scale.clone();
                 this.scaleFactor = 1;
 
+                // Throttle sound playing to avoid rapid repeats
+                this.lastSoundTime = 0;
+                this.soundCooldown = 150; // milliseconds between sound triggers
+
                 this.el.sceneEl.addEventListener('markerFound', (e) => {
                     this.isVisible = true;
                 });
 
                 this.el.sceneEl.addEventListener('markerLost', (e) => {
                     this.isVisible = false;
+                    // Stop sounds when marker is lost
+                    this.stopAllSounds();
                 });
             },
             update: function () {
@@ -537,10 +1118,42 @@
                 this.el.sceneEl.removeEventListener('onefingermove', this.handleRotation);
                 this.el.sceneEl.removeEventListener('twofingermove', this.handleScale);
             },
+            
+            // Play sound with cooldown using Howler.js
+            playSound: function (instrumentType) {
+                const now = Date.now();
+                if (now - this.lastSoundTime > this.soundCooldown) {
+                    this.lastSoundTime = now;
+                    if (sounds[instrumentType]) {
+                        sounds[instrumentType].play();
+                    }
+                }
+            },
+            
+            // Stop all sounds using Howler.js
+            stopAllSounds: function () {
+                if (sounds.maracas) {
+                    sounds.maracas.stop();
+                }
+                if (sounds.trumpet) {
+                    sounds.trumpet.stop();
+                }
+            },
+            
             handleRotation: function (event) {
                 if (this.isVisible) {
                     this.el.object3D.rotation.y += event.detail.positionChange.x * this.data.rotationFactor;
                     this.el.object3D.rotation.x += event.detail.positionChange.y * this.data.rotationFactor;
+                    
+                    // Play maracas sound when rotating maracas model
+                    if (this.data.instrumentType === 'maracas') {
+                        // Calculate movement intensity
+                        const movement = Math.abs(event.detail.positionChange.x) + Math.abs(event.detail.positionChange.y);
+                        if (movement > 0.5) { // Only play if movement is significant
+                            this.playSound('maracas');
+                            console.log('🎵 Maracas shake!');
+                        }
+                    }
                 }
             },
             handleScale: function (event) {
@@ -551,6 +1164,16 @@
                     this.el.object3D.scale.x = this.scaleFactor * this.initialScale.x;
                     this.el.object3D.scale.y = this.scaleFactor * this.initialScale.y;
                     this.el.object3D.scale.z = this.scaleFactor * this.initialScale.z;
+                    
+                    // Play trumpet sound when zooming trumpet model
+                    if (this.data.instrumentType === 'trumpet') {
+                        // Play sound on zoom gesture
+                        const zoomIntensity = Math.abs(event.detail.spreadChange);
+                        if (zoomIntensity > 2) { // Only play if zoom is significant
+                            this.playSound('trumpet');
+                            console.log('🎺 Trumpet blast!');
+                        }
+                    }
                 }
             },
         });

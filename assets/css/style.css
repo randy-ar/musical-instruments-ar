@@ -1,0 +1,317 @@
+
+/* Ensure a-scene fits the viewport */
+a-scene {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Ensure video element fits the viewport */
+
+a-scene canvas {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+video{
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body{
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.arjs-loader {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+    margin: 10px;
+}
+
+.instructions {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 15px;
+    font-family: Arial;
+    font-size: 13px;
+    z-index: 10000;
+    border-radius: 5px;
+    max-width: 90vw;
+    display: none;
+}
+
+.instructions.show {
+    display: block;
+}
+
+/* Coordinate Display Panel */
+.coordinates-panel {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    color: #00ff00;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    z-index: 10001;
+    border-radius: 8px;
+    border: 2px solid #00ff00;
+    min-width: 200px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.coordinates-panel h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #FFD700;
+    text-align: center;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 5px;
+}
+
+.coord-item {
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.coord-label {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.coord-value {
+    color: #00ff00;
+    font-weight: normal;
+}
+
+/* Control Buttons */
+.control-buttons {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10001;
+}
+
+.control-btn {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+    background: rgba(76, 175, 80, 1);
+}
+
+/* Play Sound Button */
+.play-sound-container {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10002;
+    display: none;
+}
+
+.play-sound-container.show {
+    display: block;
+}
+
+.play-sound-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    transition: all 0.3s ease;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.play-sound-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+}
+
+.play-sound-btn:active {
+    transform: scale(0.95);
+    animation: none;
+}
+
+.play-sound-btn .icon {
+    font-size: 32px;
+}
+
+.play-sound-btn.maracas {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+}
+
+.play-sound-btn.maracas:hover {
+    box-shadow: 0 12px 35px rgba(245, 87, 108, 0.7);
+}
+
+.play-sound-btn.trumpet {
+    background: linear-gradient(135deg, #ffd89b 0%, #f3a36b 100%);
+    color: #333;
+    box-shadow: 0 8px 25px rgba(243, 163, 107, 0.5);
+}
+
+.play-sound-btn.trumpet:hover {
+    box-shadow: 0 12px 35px rgba(243, 163, 107, 0.7);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.play-sound-btn.playing {
+    animation: pulse-playing 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse-playing {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Position Control Panel */
+.position-control-panel {
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10002;
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 10px;
+    border-radius: 12px;
+    border: 2px solid #667eea;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.position-control-panel.show {
+    display: flex;
+}
+
+.position-control-panel h4 {
+    color: #FFD700;
+    font-size: 12px;
+    margin: 0 0 8px 0;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.axis-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.axis-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    width: 20px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+.axis-label.x { color: #ff6b6b; }
+.axis-label.y { color: #4ecdc4; }
+.axis-label.z { color: #ffe66d; }
+
+.pos-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pos-btn:active {
+    transform: scale(0.9);
+}
+
+.pos-btn.minus {
+    background: linear-gradient(135deg, #fc5c65 0%, #eb3b5a 100%);
+    color: white;
+}
+
+.pos-btn.plus {
+    background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
+    color: white;
+}
+
+.pos-btn:hover {
+    opacity: 0.9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}

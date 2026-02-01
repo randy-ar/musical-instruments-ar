@@ -1,1182 +1,749 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NFT Image Tracking - Dragonite</title>
-    
+
     <!-- import aframe and then ar.js with image tracking / location based features -->
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-    
+
     <!-- Gesture detector for touch controls -->
     <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
 
     <!-- Howler.js for audio -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js" integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
+      integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
-    <!-- style for the loader -->
-    <style>
-        /* Ensure a-scene fits the viewport */
-        a-scene {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
+    <!-- font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
 
-        /* Ensure video element fits the viewport */
-        
-        a-scene canvas {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: cover !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        video{
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: cover !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
+    <!-- tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-        body{
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: cover !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
+    <!-- Icons -->
+    <script src="
+https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.js
+"></script>
+    <link
+      href="
+https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
+"
+      rel="stylesheet"
+    />
 
-        .arjs-loader {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
 
-        .arjs-loader div {
-            text-align: center;
-            font-size: 1.25em;
-            color: white;
-            margin: 10px;
-        }
-
-        .arjs-loader .progress {
-            font-size: 0.9em;
-            color: #4CAF50;
-        }
-
-        .instructions {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.85);
-            color: white;
-            padding: 15px;
-            font-family: Arial;
-            font-size: 13px;
-            z-index: 10000;
-            border-radius: 5px;
-            max-width: 90vw;
-            display: none;
-        }
-
-        .instructions.show {
-            display: block;
-        }
-
-        /* Coordinate Display Panel */
-        .coordinates-panel {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #00ff00;
-            padding: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            z-index: 10001;
-            border-radius: 8px;
-            border: 2px solid #00ff00;
-            min-width: 200px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-        }
-
-        .coordinates-panel h3 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-            color: #FFD700;
-            text-align: center;
-            border-bottom: 1px solid #00ff00;
-            padding-bottom: 5px;
-        }
-
-        .coord-item {
-            margin: 5px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .coord-label {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-
-        .coord-value {
-            color: #00ff00;
-            font-weight: normal;
-        }
-
-        /* Control Buttons */
-        .control-buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10001;
-        }
-
-        .control-btn {
-            background: rgba(76, 175, 80, 0.9);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-        }
-
-        .control-btn:active {
-            transform: scale(0.95);
-            background: rgba(76, 175, 80, 1);
-        }
-
-        /* Play Sound Button */
-        .play-sound-container {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10002;
-            display: none;
-        }
-
-        .play-sound-container.show {
-            display: block;
-        }
-
-        .play-sound-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-            transition: all 0.3s ease;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        .play-sound-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
-        }
-
-        .play-sound-btn:active {
-            transform: scale(0.95);
-            animation: none;
-        }
-
-        .play-sound-btn .icon {
-            font-size: 32px;
-        }
-
-        .play-sound-btn.maracas {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
-        }
-
-        .play-sound-btn.maracas:hover {
-            box-shadow: 0 12px 35px rgba(245, 87, 108, 0.7);
-        }
-
-        .play-sound-btn.trumpet {
-            background: linear-gradient(135deg, #ffd89b 0%, #f3a36b 100%);
-            color: #333;
-            box-shadow: 0 8px 25px rgba(243, 163, 107, 0.5);
-        }
-
-        .play-sound-btn.trumpet:hover {
-            box-shadow: 0 12px 35px rgba(243, 163, 107, 0.7);
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .play-sound-btn.playing {
-            animation: pulse-playing 0.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse-playing {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Position Control Panel */
-        .position-control-panel {
-            position: fixed;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10002;
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 10px;
-            border-radius: 12px;
-            border: 2px solid #667eea;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .position-control-panel.show {
-            display: flex;
-        }
-
-        .position-control-panel h4 {
-            color: #FFD700;
-            font-size: 12px;
-            margin: 0 0 8px 0;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-
-        .axis-control {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .axis-label {
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            width: 20px;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-        }
-
-        .axis-label.x { color: #ff6b6b; }
-        .axis-label.y { color: #4ecdc4; }
-        .axis-label.z { color: #ffe66d; }
-
-        .pos-btn {
-            width: 36px;
-            height: 36px;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pos-btn:active {
-            transform: scale(0.9);
-        }
-
-        .pos-btn.minus {
-            background: linear-gradient(135deg, #fc5c65 0%, #eb3b5a 100%);
-            color: white;
-        }
-
-        .pos-btn.plus {
-            background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
-            color: white;
-        }
-
-        .pos-btn:hover {
-            opacity: 0.9;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-    </style>
-</head>
-
-<body style="margin: 0px; overflow: hidden;">
-    <!-- minimal loader shown until image descriptors are loaded -->
-    <div class="arjs-loader">
-        <div>🔄 Loading NFT Marker...</div>
-        <div class="progress">Please wait, this may take a moment</div>
-    </div>
-
-    <!-- Instructions overlay -->
-    <div class="instructions" id="instructions">
-        <strong>📸 Instructions:</strong><br>
-        1. Point camera at your QR image<br>
-        2. Keep the image in full view<br>
-        3. Instruments will appear! 🎸<br>
-        <br>
-
-        <span id="status">⏳ Waiting for marker...</span>
-        
-        <!-- Model Position Display -->
-        <div id="modelPositionDisplay" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);">
-            <strong style="color: #FFD700;">📍 Model Position:</strong><br>
-            <span style="font-family: 'Courier New', monospace; font-size: 11px;">
-                <span style="color: #4CAF50;">X:</span> <span id="posX" style="color: #00ff00;">0.00</span> | 
-                <span style="color: #4CAF50;">Y:</span> <span id="posY" style="color: #00ff00;">0.00</span> | 
-                <span style="color: #4CAF50;">Z:</span> <span id="posZ" style="color: #00ff00;">0.00</span>
-            </span><br>
-            <span style="font-family: 'Courier New', monospace; font-size: 11px;">
-                <span style="color: #ff9800;">Scale:</span> <span id="scaleVal" style="color: #ffeb3b;">1.00</span> | 
-                <span style="color: #ff9800;">Rot:</span> <span id="rotVal" style="color: #ffeb3b;">0°</span>
-            </span>
+  <body style="margin: 0px; overflow: hidden">
+    <!-- Loading Screen -->
+    <div
+      id="loadingScreen"
+      class="absolute inset-0 z-50 bg-gradient-to-b from-sky-400 to-sky-600 font-[Lexend] text-white"
+    >
+      <div class="relative flex h-full w-full flex-col overflow-hidden">
+        <!-- Header -->
+        <div
+          class="flex items-center bg-transparent p-4 pb-2 justify-between z-10"
+        >
+          <div
+            class="text-white flex size-12 shrink-0 items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-4xl">music_note</span>
+          </div>
+          <h2
+            class="text-white text-xl font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12"
+          >
+            Musik AR
+          </h2>
         </div>
+
+        <!-- Background decorations -->
+        <div
+          class="absolute inset-0 opacity-20 pointer-events-none select-none text-white overflow-hidden"
+        >
+          <div class="absolute top-24 left-10 transform -rotate-12">
+            <span class="material-symbols-outlined text-7xl">grade</span>
+          </div>
+          <div class="absolute top-48 right-12 transform rotate-45">
+            <span class="material-symbols-outlined text-6xl">music_note</span>
+          </div>
+          <div
+            class="absolute bottom-40 -left-4 transform -rotate-6 opacity-30"
+          >
+            <span class="material-symbols-outlined text-8xl">piano</span>
+          </div>
+          <div
+            class="absolute bottom-32 right-8 transform rotate-12 opacity-40"
+          >
+            <span class="material-symbols-outlined text-6xl">auto_awesome</span>
+          </div>
+          <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 scale-150"
+          >
+            <span class="material-symbols-outlined text-[400px]"
+              >qr_code_scanner</span
+            >
+          </div>
+        </div>
+
+        <!-- Main illustration -->
+        <div
+          class="flex-1 flex flex-col items-center justify-center px-4 z-10 relative"
+        >
+          <div
+            class="relative w-80 h-80 flex items-center justify-center mb-10"
+          >
+            <div
+              class="absolute inset-0 bg-sky-300/30 blur-3xl rounded-full scale-90"
+            ></div>
+            <!-- Music card -->
+            <div
+              class="absolute bottom-6 left-1/2 -translate-x-1/2 w-32 h-44 bg-white rounded-xl shadow-xl border-4 border-sky-100 transform -rotate-[15deg] z-10 flex flex-col items-center p-2"
+            >
+              <div
+                class="w-full h-full border-2 border-dashed border-sky-200 rounded-lg bg-sky-50 flex flex-col items-center justify-center gap-2"
+              >
+                <span class="material-symbols-outlined text-5xl text-sky-500"
+                  >music_note</span
+                >
+                <div class="w-10 h-1.5 bg-sky-200 rounded-full"></div>
+                <div class="w-16 h-1.5 bg-sky-200 rounded-full"></div>
+              </div>
+            </div>
+            <!-- Phone mockup -->
+            <div
+              class="absolute top-4 left-1/2 -translate-x-1/2 w-36 h-64 bg-sky-900 rounded-[2.5rem] border-[6px] border-sky-200 shadow-2xl z-20 transform rotate-[5deg] flex flex-col items-center overflow-hidden ring-1 ring-black/20"
+            >
+              <div class="w-full h-full bg-sky-800 relative overflow-hidden">
+                <div class="absolute top-0 w-full flex justify-center z-30">
+                  <div
+                    class="w-16 h-5 bg-black/30 rounded-b-xl backdrop-blur-md"
+                  ></div>
+                </div>
+                <div
+                  class="absolute inset-0 flex items-center justify-center p-6"
+                >
+                  <div
+                    class="w-full h-4/5 border-2 border-white/30 rounded-xl relative"
+                  >
+                    <div
+                      class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-sky-300 rounded-tl-sm"
+                    ></div>
+                    <div
+                      class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-sky-300 rounded-tr-sm"
+                    ></div>
+                    <div
+                      class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-sky-300 rounded-bl-sm"
+                    ></div>
+                    <div
+                      class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-sky-300 rounded-br-sm"
+                    ></div>
+                    <div
+                      class="absolute inset-0 flex items-center justify-center opacity-30"
+                    >
+                      <span
+                        class="material-symbols-outlined text-6xl text-white"
+                        >music_note</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="absolute top-1/2 left-0 right-0 h-1 bg-sky-200 shadow-[0_0_20px_4px_rgba(125,211,252,0.8)] z-20 animate-pulse"
+                ></div>
+                <div
+                  class="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-sky-400/0 to-sky-400/20 z-10"
+                ></div>
+              </div>
+            </div>
+            <!-- Sparkle decorations -->
+            <div
+              class="absolute -top-2 right-12 text-yellow-300 drop-shadow-[0_4px_4px_rgba(0,0,0,0.1)] z-30 animate-bounce"
+              style="animation-duration: 3s"
+            >
+              <span class="material-symbols-outlined text-5xl fill-1"
+                >auto_awesome</span
+              >
+            </div>
+            <div
+              class="absolute bottom-24 -left-6 text-white drop-shadow-md z-30 transform -rotate-12"
+            >
+              <span class="material-symbols-outlined text-4xl">music_note</span>
+            </div>
+            <div
+              class="absolute top-20 -right-4 text-sky-100 drop-shadow-md z-30 transform rotate-12 opacity-80"
+            >
+              <span class="material-symbols-outlined text-3xl">music_note</span>
+            </div>
+          </div>
+
+          <!-- Text -->
+          <h1
+            class="text-white tracking-tight text-3xl font-bold leading-tight px-4 text-center pb-3 drop-shadow-sm"
+          >
+            Menyiapkan keajaiban musik...
+          </h1>
+          <p
+            class="text-sky-100 text-lg font-medium leading-relaxed px-8 text-center max-w-sm"
+          >
+            Siapkan kartu instrumenmu untuk berpetualang!
+          </p>
+        </div>
+
+        <!-- Progress bar section -->
+        <div class="w-full max-w-md mx-auto px-6 pb-12 z-10">
+          <div class="flex flex-col gap-3">
+            <div class="flex gap-6 justify-between items-end px-1">
+              <p
+                class="text-white text-lg font-bold leading-normal drop-shadow-sm"
+              >
+                Memuat
+              </p>
+              <p
+                id="loadingPercent"
+                class="text-white text-lg font-bold leading-normal"
+              >
+                0%
+              </p>
+            </div>
+            <div
+              class="h-4 w-full bg-sky-200 rounded-full overflow-hidden shadow-inner ring-2 ring-white/10"
+            >
+              <div
+                id="loadingProgress"
+                class="h-full bg-sky-500 w-[0%] rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] relative transition-all duration-300"
+              >
+                <div
+                  class="absolute top-0 right-0 bottom-0 left-0 bg-gradient-to-b from-white/10 to-transparent"
+                ></div>
+              </div>
+            </div>
+            <p
+              class="text-sky-100/90 text-sm font-medium leading-normal text-center italic mt-2"
+            >
+              Tips: Gerakkan ponselmu perlahan di sekitar ruangan
+            </p>
+          </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="w-full flex justify-center pb-2 z-20">
+          <div
+            class="w-32 h-1.5 bg-white/40 rounded-full backdrop-blur-sm"
+          ></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Play Sound Buttons -->
-    <div class="play-sound-container" id="maracasSoundBtn">
-        <button class="play-sound-btn maracas" id="maracasBtn">
-            <span class="icon">🎶</span>
-            <span>Tap to Shake!</span>
-        </button>
+    <!-- Idle Camera Screen / Scan Overlay -->
+    <div
+      id="idleCameraScreen"
+      class="absolute inset-0 z-40 pointer-events-none font-[Lexend] hidden"
+    >
+      <!-- Gradient overlay for better visibility -->
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-transparent to-slate-900/60"
+      ></div>
+
+      <!-- Top instruction banner -->
+      <div
+        class="relative z-20 flex items-center justify-center px-6 pt-14 pb-4 transition-opacity duration-300"
+      >
+        <div class="px-4 w-full max-w-md">
+          <div
+            class="bg-white/90 backdrop-blur-md px-4 py-3 rounded-2xl shadow-lg border border-sky-100"
+          >
+            <h1
+              class="text-sky-900 text-base font-bold leading-tight tracking-tight text-center"
+            >
+              Ayo pindai kartu alat musikmu!
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scan frame in center -->
+      <div
+        class="absolute inset-0 z-10 flex flex-col items-center justify-center p-8"
+      >
+        <div
+          class="w-full max-w-[300px] aspect-square rounded-3xl border-dashed border-[3px] border-sky-500/80 flex flex-col items-center justify-center relative bg-sky-500/5 backdrop-blur-sm shadow-[0_0_15px_rgba(14,165,233,0.3)] transition-opacity duration-300"
+        >
+          <!-- Corner brackets -->
+          <div
+            class="absolute -top-1 -left-1 w-8 h-8 border-t-[5px] border-l-[5px] border-sky-500 rounded-tl-2xl"
+          ></div>
+          <div
+            class="absolute -top-1 -right-1 w-8 h-8 border-t-[5px] border-r-[5px] border-sky-500 rounded-tr-2xl"
+          ></div>
+          <div
+            class="absolute -bottom-1 -left-1 w-8 h-8 border-b-[5px] border-l-[5px] border-sky-500 rounded-bl-2xl"
+          ></div>
+          <div
+            class="absolute -bottom-1 -right-1 w-8 h-8 border-b-[5px] border-r-[5px] border-sky-500 rounded-br-2xl"
+          ></div>
+
+          <!-- Inner pulse border -->
+          <div
+            class="absolute inset-4 border border-sky-400/30 rounded-2xl animate-pulse"
+          ></div>
+
+          <!-- AR icon and text -->
+          <div class="flex flex-col items-center gap-3">
+            <span
+              class="material-symbols-outlined text-6xl text-white/90 drop-shadow-lg"
+              >view_in_ar</span
+            >
+            <div class="text-center px-4">
+              <p
+                class="text-white text-lg font-bold drop-shadow-md tracking-wide"
+              >
+                Pindai Kartu
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom status indicator -->
+      <div
+        class="absolute bottom-0 left-0 right-0 z-20 flex justify-center pb-8"
+        style="padding-bottom: max(2rem, env(safe-area-inset-bottom))"
+      >
+        <div
+          id="scanStatus"
+          class="flex items-center gap-3 bg-slate-900/60 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/10 shadow-lg"
+        >
+          <div class="flex h-3 w-3 relative">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+            ></span>
+            <span
+              class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+            ></span>
+          </div>
+          <span
+            id="scanStatusText"
+            class="text-sky-50 text-sm font-medium tracking-wide"
+            >Mencari kartu...</span
+          >
+        </div>
+      </div>
     </div>
 
-    <div class="play-sound-container" id="trumpetSoundBtn">
-        <button class="play-sound-btn trumpet" id="trumpetBtn">
-            <span class="icon">🎺</span>
-            <span>Hold to Blow!</span>
-        </button>
+    <!-- Marker Detected Screen / Instrument Display -->
+    <div
+      id="markerDetectedScreen"
+      class="absolute inset-0 z-40 pointer-events-none font-[Lexend] hidden"
+    >
+      <!-- Top detection badge -->
+      <div class="z-20 flex items-center justify-center p-6 pt-12 w-full">
+        <div
+          id="detectionBadge"
+          class="bg-sky-500/90 backdrop-blur-md rounded-full px-5 py-2 w-fit border border-white/20 shadow-lg shadow-sky-900/20 transition-all duration-300"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              class="material-symbols-outlined text-white text-lg"
+              style="font-variation-settings: 'FILL' 1"
+              >check_circle</span
+            >
+            <p
+              id="detectionText"
+              class="text-white text-sm font-bold tracking-wide"
+            >
+              Instrumen Terdeteksi!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instrument name display -->
+      <div
+        class="absolute top-[15%] left-[50%] -translate-x-1/2 flex flex-col items-center gap-2 w-full px-6 text-center z-10"
+      >
+        <h1
+          id="instrumentTitle"
+          class="text-white text-4xl font-black tracking-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]"
+          style="-webkit-text-stroke: 1px #0ea5e9"
+        >
+          INSTRUMEN
+        </h1>
+        <div
+          class="bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full border border-white/20"
+        >
+          <span
+            id="instrumentFamily"
+            class="text-white text-base font-bold uppercase tracking-[0.1em] drop-shadow-md"
+            >Keluarga Musik</span
+          >
+        </div>
+      </div>
+
+      <!-- Sparkle decorations -->
+      <span
+        class="material-symbols-outlined absolute text-yellow-400 pointer-events-none animate-bounce"
+        style="
+          top: 25%;
+          left: 10%;
+          font-size: 32px;
+          animation-delay: 0s;
+          animation-duration: 3s;
+        "
+        >auto_awesome</span
+      >
+      <span
+        class="material-symbols-outlined absolute text-yellow-400 pointer-events-none animate-bounce"
+        style="
+          top: 20%;
+          right: 10%;
+          font-size: 40px;
+          animation-delay: 1s;
+          animation-duration: 3s;
+        "
+        >auto_awesome</span
+      >
+      <span
+        class="material-symbols-outlined absolute text-yellow-300 pointer-events-none animate-bounce"
+        style="
+          bottom: 40%;
+          left: 15%;
+          font-size: 28px;
+          animation-delay: 0.5s;
+          animation-duration: 3s;
+        "
+        >auto_awesome</span
+      >
+      <span
+        class="material-symbols-outlined absolute text-yellow-300 pointer-events-none animate-bounce"
+        style="
+          bottom: 45%;
+          right: 15%;
+          font-size: 24px;
+          animation-delay: 1.5s;
+          animation-duration: 3s;
+        "
+        >auto_awesome</span
+      >
+
+      <!-- Bottom play button area -->
+      <div
+        class="z-20 pb-16 pt-8 flex flex-col items-center justify-end bg-gradient-to-t from-black/80 via-black/40 to-transparent absolute bottom-0 w-full pointer-events-auto"
+        style="padding-bottom: max(4rem, env(safe-area-inset-bottom))"
+      >
+        <div class="flex flex-col items-center gap-4">
+          <button
+            id="mainPlayBtn"
+            class="group flex items-center justify-center rounded-full size-24 bg-sky-500 text-white shadow-[0_0_40px_-5px_rgba(14,165,233,0.6)] border-[6px] border-white transition-all active:scale-95 hover:scale-105 hover:bg-sky-400"
+          >
+            <span
+              class="material-symbols-outlined !text-6xl"
+              style="font-variation-settings: 'FILL' 1"
+              >play_arrow</span
+            >
+          </button>
+          <span
+            id="playBtnLabel"
+            class="text-white font-bold text-lg tracking-wide drop-shadow-md bg-black/20 px-4 py-1 rounded-full backdrop-blur-sm"
+            >Putar Suara</span
+          >
+        </div>
+      </div>
     </div>
+
+    <!-- Hidden debug info (optional, can show when marker is found) -->
+    <div
+      id="modelPositionDisplay"
+      class="hidden absolute top-20 left-4 z-50 bg-black/70 text-white p-3 rounded-lg text-xs font-mono"
+    >
+      <strong class="text-yellow-400">📍 Model Position:</strong><br />
+      <span class="text-green-400">X:</span>
+      <span id="posX">0.00</span> |
+      <span class="text-green-400">Y:</span>
+      <span id="posY">0.00</span> |
+      <span class="text-green-400">Z:</span>
+      <span id="posZ">0.00</span>
+      <br />
+      <span class="text-orange-400">Scale:</span>
+      <span id="scaleVal">1.00</span> |
+      <span class="text-orange-400">Rot:</span>
+      <span id="rotVal">0°</span>
+    </div>
+
+    <!-- Play buttons handled by marker detected screen -->
 
     <!-- Position Control Panel -->
     <div class="position-control-panel" id="positionControlPanel">
-        <h4>📐 Adjust Position</h4>
-        <div class="axis-control">
-            <span class="axis-label x">X</span>
-            <button class="pos-btn minus" onclick="adjustPosition('x', -10)">−</button>
-            <button class="pos-btn plus" onclick="adjustPosition('x', 10)">+</button>
-        </div>
-        <div class="axis-control">
-            <span class="axis-label y">Y</span>
-            <button class="pos-btn minus" onclick="adjustPosition('y', -10)">−</button>
-            <button class="pos-btn plus" onclick="adjustPosition('y', 10)">+</button>
-        </div>
-        <div class="axis-control">
-            <span class="axis-label z">Z</span>
-            <button class="pos-btn minus" onclick="adjustPosition('z', -10)">−</button>
-            <button class="pos-btn plus" onclick="adjustPosition('z', 10)">+</button>
-        </div>
+      <h4>📐 Adjust Position</h4>
+      <div class="axis-control">
+        <span class="axis-label x">X</span>
+        <button class="pos-btn minus" onclick="adjustPosition('x', -10)">
+          −
+        </button>
+        <button class="pos-btn plus" onclick="adjustPosition('x', 10)">
+          +
+        </button>
+      </div>
+      <div class="axis-control">
+        <span class="axis-label y">Y</span>
+        <button class="pos-btn minus" onclick="adjustPosition('y', -10)">
+          −
+        </button>
+        <button class="pos-btn plus" onclick="adjustPosition('y', 10)">
+          +
+        </button>
+      </div>
+      <div class="axis-control">
+        <span class="axis-label z">Z</span>
+        <button class="pos-btn minus" onclick="adjustPosition('z', -10)">
+          −
+        </button>
+        <button class="pos-btn plus" onclick="adjustPosition('z', 10)">
+          +
+        </button>
+      </div>
     </div>
 
     <!-- a-frame scene -->
     <a-scene
-        vr-mode-ui="enabled: false;"
-        renderer="logarithmicDepthBuffer: true;"
-        embedded
-        gesture-detector
-        arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
+      vr-mode-ui="enabled: false;"
+      renderer="logarithmicDepthBuffer: true;"
+      embedded
+      gesture-detector
+      arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
     >
-        <!-- a-nft is the anchor that defines an Image Tracking entity -->
-        <!-- on 'url' use the path to the Image Descriptors created before -->
-        <!-- the path should end with the name without the extension -->
-        <a-nft
-            markerhandler
-            type="nft"
-            url="/assets/images/maracas/maracas"
-            smooth="true"
-            smoothCount="10"
-            smoothTolerance=".01"
-            smoothThreshold="5"
+      <!-- a-nft is the anchor that defines an Image Tracking entity -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/maracas/maracas"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <!-- Maracas 3D Model -->
+        <a-entity
+          id="maracasModel"
+          gltf-model="/assets/models/maracas/scene.gltf"
+          scale="38 38 38"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: maracas"
         >
-            <!-- Maracas 3D Model -->
-            <a-entity
-                id="maracasModel"
-                gltf-model="/assets/models/maracas/scene.gltf"
-                scale="38 38 38"
-                position="50 -50 90"
-                rotation="-90 0 0"
-                animation-mixer
-                gesture-handler="instrumentType: maracas"
-            >
-            </a-entity>
+        </a-entity>
+      </a-nft>
 
-            <!-- Text Label -->
-            <a-text
-                value="MARACAS"
-                align="center"
-                color="#FFD700"
-                scale="1 1 1"
-                position="0 120 100"
-            >
-            </a-text>
-
-            <!-- Optional: Add a platform/base -->
-            <a-cylinder
-                color="#4CAF50"
-                height="3"
-                radius="30"
-                position="0 0 0"
-                opacity="0.7"
-            >
-            </a-cylinder>
-        </a-nft>
-
-        <a-nft
-            markerhandler
-            type="nft"
-            url="/assets/images/trumpet/trumpet"
-            smooth="true"
-            smoothCount="10"
-            smoothTolerance=".01"
-            smoothThreshold="5"
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/trumpet/trumpet"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <!-- Trumpet 3D Model -->
+        <a-entity
+          id="trumpetModel"
+          gltf-model="/assets/models/trumpet/scene.gltf"
+          scale="45 45 45"
+          position="0 50 0"
+          rotation="-98 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: trumpet"
         >
-            <!-- Trumpet 3D Model -->
-            <a-entity
-                id="trumpetModel"
-                gltf-model="/assets/models/trumpet/scene.gltf"
-                scale="45 45 45"
-                position="100 200 -80"
-                rotation="-98 0 0"
-                animation-mixer
-                gesture-handler="instrumentType: trumpet"
-            >
-            </a-entity>
+        </a-entity>
+      </a-nft>
 
-            <!-- Text Label -->
-            <a-text
-                value="TRUMPET"
-                align="center"
-                color="#FFD700"
-                scale="1 1 1"
-                position="0 120 100"
-            >
-            </a-text>
+      <!-- 3. SAXOPHONE -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/saxophone/saxophone"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="saxophoneModel"
+          gltf-model="/assets/models/saxophone/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: saxophone"
+        ></a-entity>
+      </a-nft>
 
-            <!-- Optional: Add a platform/base -->
-            <a-cylinder
-                color="#4CAF50"
-                height="3"
-                radius="30"
-                position="0 0 0"
-                opacity="0.7"
-            >
-            </a-cylinder>
-        </a-nft>
-        
-        <!-- static camera that moves according to the device movements -->
-        <a-entity camera></a-entity>
+      <!-- 4. ACCORDION -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/accordion/accordion"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="accordionModel"
+          gltf-model="/assets/models/accordion/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: accordion"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 5. CELLO -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/cello/cello"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="celloModel"
+          gltf-model="/assets/models/cello/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: cello"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 6. HARP -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/harp/harp"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="harpModel"
+          gltf-model="/assets/models/harp/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: harp"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 7. UKULELE -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/ukulele/ukulele"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="ukuleleModel"
+          gltf-model="/assets/models/ukulele/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: ukulele"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 8. TABLA -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/tabla/tabla"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="tablaModel"
+          gltf-model="/assets/models/tabla/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: tabla"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 9. TAMBORINE -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/tamborine/tamborine"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="tamborineModel"
+          gltf-model="/assets/models/tamborine/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: tamborine"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 10. PIANIKA -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/pianika/pianika"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="pianikaModel"
+          gltf-model="/assets/models/pianika/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: pianika"
+        ></a-entity>
+      </a-nft>
+
+      <!-- Camera -->
+      <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
-        // ============================================
-        // Howler.js Audio Setup
-        // ============================================
-        
-        // Initialize Howler sounds
-        const sounds = {
-            maracas: new Howl({
-                src: ['/assets/sounds/maracas/maracas.mp3'],
-                volume: 1.0,
-                preload: true,
-                onload: () => console.log('🎶 Maracas sound loaded'),
-                onloaderror: (id, err) => console.error('Maracas load error:', err)
-            }),
-            trumpet: new Howl({
-                src: ['/assets/sounds/trumpet/trumpet.mp3'],
-                volume: 1.0,
-                loop: true,  // Enable looping for trumpet
-                preload: true,
-                onload: () => console.log('🎺 Trumpet sound loaded'),
-                onloaderror: (id, err) => console.error('Trumpet load error:', err)
-            })
-        };
-        
-        if (Howler.ctx && Howler.ctx.state === 'suspended') {
-            Howler.ctx.resume().then(() => {
-                console.log('🔊 Howler AudioContext resumed');
-            });
-        }
-        
-        // Play a silent/short sound to fully unlock on iOS
-        sounds.maracas.volume(0);
-        sounds.maracas.play();
-        setTimeout(() => {
-            sounds.maracas.stop();
-            sounds.maracas.volume(1.0);
-        }, 100);
-        
-        sounds.trumpet.volume(0);
-        sounds.trumpet.play();
-        setTimeout(() => {
-            sounds.trumpet.stop();
-            sounds.trumpet.volume(1.0);
-        }, 100);
-        
-        console.log('✅ Howler.js audio initialized!');
-
-        // Current active instrument and model
-        let activeInstrument = null;
-        let currentActiveModel = null;
-        let trumpetHoldTimer = null;
-        let isTrumpetHolding = false;
-
-        // ============================================
-        // Position Adjustment Functions
-        // ============================================
-        function adjustPosition(axis, step) {
-            if (!currentActiveModel) {
-                console.log('⚠️ No active model to adjust');
-                return;
-            }
-            
-            const model = document.getElementById(currentActiveModel);
-            if (!model) return;
-            
-            const position = model.getAttribute('position');
-            const newPosition = { ...position };
-            
-            // Adjust the specified axis
-            newPosition[axis] += step;
-            
-            model.setAttribute('position', newPosition);
-            console.log(`📐 ${currentActiveModel} position adjusted: ${axis.toUpperCase()} ${step > 0 ? '+' : ''}${step} → ${newPosition[axis].toFixed(2)}`);
-        }
-
-        // Show position control panel
-        function showPositionControls() {
-            const panel = document.getElementById('positionControlPanel');
-            if (panel) {
-                panel.classList.add('show');
-            }
-        }
-
-        // Hide position control panel
-        function hidePositionControls() {
-            const panel = document.getElementById('positionControlPanel');
-            if (panel) {
-                panel.classList.remove('show');
-            }
-        }
-
-        // ============================================
-        // Maracas: Tap to shake (sound on touchstart/mousedown)
-        // ============================================
-        function playMaracas() {
-            // Play sound
-            sounds.maracas.stop();
-            sounds.maracas.play();
-            console.log('🎶 Maracas shake!');
-            
-            // Animate button
-            const btn = document.getElementById('maracasBtn');
-            if (btn) {
-                btn.classList.add('playing');
-                sounds.maracas.once('end', () => {
-                    btn.classList.remove('playing');
-                });
-            }
-            
-            // Animate 3D model - shake/rotate
-            const model = document.getElementById('maracasModel');
-            if (model) {
-                shakeMaracasModel(model);
-            }
-        }
-
-        // Shake animation for maracas 3D model
-        function shakeMaracasModel(model) {
-            const originalRotation = model.getAttribute('rotation');
-            let shakeCount = 0;
-            const maxShakes = 6;
-            const shakeAngle = 15;
-            
-            function shake() {
-                if (shakeCount >= maxShakes) {
-                    // Return to original rotation
-                    model.setAttribute('rotation', originalRotation);
-                    return;
-                }
-                
-                const direction = shakeCount % 2 === 0 ? shakeAngle : -shakeAngle;
-                model.setAttribute('rotation', {
-                    x: originalRotation.x,
-                    y: originalRotation.y + direction,
-                    z: originalRotation.z + direction
-                });
-                
-                shakeCount++;
-                setTimeout(shake, 80);
-            }
-            
-            shake();
-        }
-
-        // ============================================
-        // Trumpet: Hold to blow (sound starts on touchstart and loops)
-        // ============================================
-        let trumpetScaleAnimation = null;
-        let trumpetOriginalScale = null;
-        
-        function startTrumpetHold() {
-            isTrumpetHolding = true;
-            console.log('🎺 Trumpet blowing started!');
-            
-            // Play sound immediately and loop
-            sounds.trumpet.stop();
-            sounds.trumpet.play();
-            
-            // Visual feedback on button
-            const btn = document.getElementById('trumpetBtn');
-            if (btn) {
-                btn.style.transform = 'scale(0.9)';
-                btn.style.opacity = '0.7';
-                btn.classList.add('playing');
-            }
-            
-            // Start looping scale animation on 3D model
-            const model = document.getElementById('trumpetModel');
-            if (model) {
-                trumpetOriginalScale = { ...model.getAttribute('scale') };
-                startTrumpetScaleLoop(model);
-            }
-        }
-
-        function releaseTrumpet() {
-            if (!isTrumpetHolding) return;
-            isTrumpetHolding = false;
-            
-            console.log('🎺 Trumpet released - sound stopped');
-            
-            // Stop sound on release
-            sounds.trumpet.stop();
-            
-            // Reset button
-            const btn = document.getElementById('trumpetBtn');
-            if (btn) {
-                btn.style.transform = '';
-                btn.style.opacity = '';
-                btn.classList.remove('playing');
-            }
-            
-            // Stop animation and reset 3D model
-            if (trumpetScaleAnimation) {
-                clearInterval(trumpetScaleAnimation);
-                trumpetScaleAnimation = null;
-            }
-            
-            const model = document.getElementById('trumpetModel');
-            if (model && trumpetOriginalScale) {
-                model.setAttribute('scale', trumpetOriginalScale);
-            }
-        }
-
-        // Looping scale animation for trumpet while holding/blowing
-        function startTrumpetScaleLoop(model) {
-            let scaleUp = true;
-            const minScale = 0.9;
-            const maxScale = 1.15;
-            
-            trumpetScaleAnimation = setInterval(() => {
-                if (!isTrumpetHolding) {
-                    clearInterval(trumpetScaleAnimation);
-                    trumpetScaleAnimation = null;
-                    if (trumpetOriginalScale) {
-                        model.setAttribute('scale', trumpetOriginalScale);
-                    }
-                    return;
-                }
-                
-                const scaleFactor = scaleUp ? maxScale : minScale;
-                model.setAttribute('scale', {
-                    x: trumpetOriginalScale.x * scaleFactor,
-                    y: trumpetOriginalScale.y * scaleFactor,
-                    z: trumpetOriginalScale.z * scaleFactor
-                });
-                scaleUp = !scaleUp;
-            }, 150);  // Faster animation for more dynamic effect
-        }
-
-        // ============================================
-        // Setup Button Event Listeners
-        // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Maracas button - play on tap (touchstart/mousedown)
-            const maracasBtn = document.getElementById('maracasBtn');
-            if (maracasBtn) {
-                maracasBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    playMaracas();
-                });
-                maracasBtn.addEventListener('mousedown', playMaracas);
-            }
-            
-            // Trumpet button - play on release (touchend/mouseup)
-            const trumpetBtn = document.getElementById('trumpetBtn');
-            if (trumpetBtn) {
-                trumpetBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    startTrumpetHold();
-                });
-                trumpetBtn.addEventListener('mousedown', startTrumpetHold);
-                
-                trumpetBtn.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    releaseTrumpet();
-                });
-                trumpetBtn.addEventListener('mouseup', releaseTrumpet);
-                trumpetBtn.addEventListener('mouseleave', () => {
-                    if (isTrumpetHolding) releaseTrumpet();
-                });
-            }
-        });
-
-        // Show/hide sound button based on instrument type
-        function showSoundButton(instrumentType) {
-            // Hide all buttons first
-            document.getElementById('maracasSoundBtn').classList.remove('show');
-            document.getElementById('trumpetSoundBtn').classList.remove('show');
-            
-            // Show the relevant button
-            const btnContainer = document.getElementById(`${instrumentType}SoundBtn`);
-            if (btnContainer) {
-                btnContainer.classList.add('show');
-            }
-            activeInstrument = instrumentType;
-        }
-
-        // Hide all sound buttons
-        function hideAllSoundButtons() {
-            document.getElementById('maracasSoundBtn').classList.remove('show');
-            document.getElementById('trumpetSoundBtn').classList.remove('show');
-            activeInstrument = null;
-            isTrumpetHolding = false;
-            
-            // Clear trumpet animation and reset model
-            if (trumpetScaleAnimation) {
-                clearInterval(trumpetScaleAnimation);
-                trumpetScaleAnimation = null;
-            }
-            
-            // Reset trumpet model to original scale
-            const trumpetModel = document.getElementById('trumpetModel');
-            if (trumpetModel && trumpetOriginalScale) {
-                trumpetModel.setAttribute('scale', trumpetOriginalScale);
-            }
-            
-            // Stop all sounds when marker is lost
-            sounds.maracas.stop();
-            sounds.trumpet.stop();
-        }
-
-        // Register custom A-Frame component for marker handling
-        AFRAME.registerComponent('markerhandler', {
-            init: function() {
-                const marker = this.el;
-                const markerUrl = marker.getAttribute('url');
-                
-                // Determine instrument type from marker URL
-                let instrumentType = 'unknown';
-                if (markerUrl.includes('maracas')) {
-                    instrumentType = 'maracas';
-                } else if (markerUrl.includes('trumpet')) {
-                    instrumentType = 'trumpet';
-                }
-                
-                // Position tracking interval
-                let positionTrackingInterval = null;
-                
-                // Marker found event
-                marker.addEventListener('markerFound', () => {
-                    console.log(`✅ ${instrumentType.toUpperCase()} Marker Found!`);
-                    
-                    // Update status UI
-                    const status = document.getElementById('status');
-                    if (status) {
-                        status.innerHTML = `<span style="color: #4CAF50;">✅ ${instrumentType.charAt(0).toUpperCase() + instrumentType.slice(1)} detected! Tap button to play sound</span>`;
-                    }
-                    
-                    // Show the play button for this instrument
-                    showSoundButton(instrumentType);
-                    
-                    // Set current active model for position adjustment
-                    const modelId = instrumentType === 'maracas' ? 'maracasModel' : 'trumpetModel';
-                    currentActiveModel = modelId;
-                    
-                    // Show position control panel
-                    showPositionControls();
-                    
-                    // Show position display and start tracking
-                    const positionDisplay = document.getElementById('modelPositionDisplay');
-                    if (positionDisplay) {
-                        positionDisplay.style.display = 'block';
-                    }
-                    
-                    // Get the model element
-                    const model = document.getElementById(modelId);
-                    
-                    // Start tracking position
-                    if (model) {
-                        positionTrackingInterval = setInterval(() => {
-                            const position = model.getAttribute('position');
-                            const scale = model.getAttribute('scale');
-                            const rotation = model.getAttribute('rotation');
-                            
-                            if (position) {
-                                document.getElementById('posX').textContent = position.x.toFixed(2);
-                                document.getElementById('posY').textContent = position.y.toFixed(2);
-                                document.getElementById('posZ').textContent = position.z.toFixed(2);
-                            }
-                            if (scale) {
-                                document.getElementById('scaleVal').textContent = scale.x.toFixed(2);
-                            }
-                            if (rotation) {
-                                document.getElementById('rotVal').textContent = `${rotation.x.toFixed(0)}°`;
-                            }
-                        }, 100);
-                    }
-                });
-                
-                // Marker lost event
-                marker.addEventListener('markerLost', () => {
-                    console.log(`⚠️ ${instrumentType.toUpperCase()} Marker Lost`);
-                    
-                    // Update status UI
-                    const status = document.getElementById('status');
-                    if (status) {
-                        status.innerHTML = '<span style="color: #ff9800;">⚠️ Marker Lost - Point camera back at the card</span>';
-                    }
-                    
-                    // Hide the play button
-                    hideAllSoundButtons();
-                    
-                    // Clear current active model
-                    currentActiveModel = null;
-                    
-                    // Hide position control panel
-                    hidePositionControls();
-                    
-                    // Hide position display and stop tracking
-                    const positionDisplay = document.getElementById('modelPositionDisplay');
-                    if (positionDisplay) {
-                        positionDisplay.style.display = 'none';
-                    }
-                    
-                    if (positionTrackingInterval) {
-                        clearInterval(positionTrackingInterval);
-                        positionTrackingInterval = null;
-                    }
-                });
-            }
-        });
-
-        // Hide loader when NFT markers are loaded
-        window.addEventListener('arjs-nft-loaded', function() {
-            console.log('✅ NFT Marker loaded successfully!');
-            
-            // Hide loader
-            const loader = document.querySelector('.arjs-loader');
-            if (loader) {
-                loader.style.display = 'none';
-            }
-
-            // Show instructions
-            const instructions = document.getElementById('instructions');
-            if (instructions) {
-                instructions.classList.add('show');
-            }
-        });
-
-        // Optional: Track distance from marker
-        window.addEventListener('load', () => {
-            const camera = document.querySelector('[camera]');
-            const marker = document.querySelector('a-nft');
-            let distanceCheckInterval;
-
-            if (marker && camera) {
-                marker.addEventListener('markerFound', () => {
-                    // Start tracking distance
-                    distanceCheckInterval = setInterval(() => {
-                        const cameraPosition = camera.object3D.position;
-                        const markerPosition = marker.object3D.position;
-                        const distance = cameraPosition.distanceTo(markerPosition);
-                        
-                        // Log distance (you can use this for custom logic)
-                        console.log('Distance from marker:', distance.toFixed(2));
-                        
-                        // Example: Change model size based on distance
-                        // const model = marker.querySelector('a-entity[gltf-model]');
-                        // if (model && distance > 100) {
-                        //     model.setAttribute('scale', '100 100 100');
-                        // } else {
-                        //     model.setAttribute('scale', '80 80 80');
-                        // }
-                    }, 500); // Check every 500ms
-                });
-
-                marker.addEventListener('markerLost', () => {
-                    // Stop tracking distance
-                    if (distanceCheckInterval) {
-                        clearInterval(distanceCheckInterval);
-                    }
-                });
-            }
-        });
-
-        // Fallback: hide loader after 10 seconds if event doesn't fire
-        setTimeout(function() {
-            const loader = document.querySelector('.arjs-loader');
-            if (loader && loader.style.display !== 'none') {
-                console.log('⚠️ Loader timeout - hiding anyway');
-                loader.style.display = 'none';
-                
-                const instructions = document.getElementById('instructions');
-                if (instructions) {
-                    instructions.classList.add('show');
-                }
-            }
-        }, 10000);
-
-        // Log scene loaded
-        const scene = document.querySelector('a-scene');
-        if (scene) {
-            scene.addEventListener('loaded', function() {
-                console.log('🎬 A-Frame scene loaded');
-                
-                // Initialize controls after scene is loaded
-                initializeControls();
-            });
-        }
-
-        // Initialize control buttons and coordinate tracking
-        function initializeControls() {
-            const model = document.getElementById('maracasModel');
-            if (!model) {
-                console.error('Model not found!');
-                return;
-            }
-
-            // Get current position, scale, rotation
-            let currentPos = { x: 0, y: -50, z: -50 };
-            let currentScale = 0.1;
-            let currentRot = { x: -90, y: 0, z: 0 };
-
-            // Update coordinate display
-            function updateCoordinateDisplay() {
-                document.getElementById('posX').textContent = currentPos.x.toFixed(2);
-                document.getElementById('posY').textContent = currentPos.y.toFixed(2);
-                document.getElementById('posZ').textContent = currentPos.z.toFixed(2);
-                document.getElementById('scaleVal').textContent = currentScale.toFixed(3);
-                document.getElementById('rotX').textContent = currentRot.x.toFixed(0);
-            }
-
-            // Apply changes to model
-            function applyChanges() {
-                model.setAttribute('position', `${currentPos.x} ${currentPos.y} ${currentPos.z}`);
-                model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
-                updateCoordinateDisplay();
-                
-                // Log to console for easy copy-paste
-                console.log(`📊 Current Settings:
-                    position="${currentPos.x} ${currentPos.y} ${currentPos.z}"
-                    scale="${currentScale} ${currentScale} ${currentScale}"
-                    rotation="${currentRot.x} ${currentRot.y} ${currentRot.z}"`);
-            }
-
-            // Button event listeners
-            document.getElementById('btnScaleUp').addEventListener('click', () => {
-                currentScale += 0.01;
-                applyChanges();
-            });
-
-            document.getElementById('btnScaleDown').addEventListener('click', () => {
-                currentScale = Math.max(0.01, currentScale - 0.01);
-                applyChanges();
-            });
-
-            document.getElementById('btnMoveUp').addEventListener('click', () => {
-                currentPos.y += 5;
-                applyChanges();
-            });
-
-            document.getElementById('btnMoveDown').addEventListener('click', () => {
-                currentPos.y -= 5;
-                applyChanges();
-            });
-
-            document.getElementById('btnMoveForward').addEventListener('click', () => {
-                currentPos.z += 5;
-                applyChanges();
-            });
-
-            document.getElementById('btnMoveBack').addEventListener('click', () => {
-                currentPos.z -= 5;
-                applyChanges();
-            });
-
-            // Real-time coordinate tracking
-            setInterval(() => {
-                const position = model.getAttribute('position');
-                const scale = model.getAttribute('scale');
-                const rotation = model.getAttribute('rotation');
-                
-                if (position) {
-                    currentPos = { x: position.x, y: position.y, z: position.z };
-                }
-                if (scale) {
-                    currentScale = scale.x;
-                }
-                if (rotation) {
-                    currentRot = { x: rotation.x, y: rotation.y, z: rotation.z };
-                }
-                
-                updateCoordinateDisplay();
-            }, 100); // Update every 100ms
-
-            // Initial display
-            updateCoordinateDisplay();
-        }
-
-        // Add gesture controls component (pinch to zoom) with sound support
-        AFRAME.registerComponent('gesture-handler', {
-            schema: {
-                enabled: { default: true },
-                rotationFactor: { default: 5 },
-                minScale: { default: 0.01 },
-                maxScale: { default: 10 },
-                instrumentType: { default: '' },
-            },
-            init: function () {
-                this.handleScale = this.handleScale.bind(this);
-                this.handleRotation = this.handleRotation.bind(this);
-
-                this.isVisible = false;
-                this.initialScale = this.el.object3D.scale.clone();
-                this.scaleFactor = 1;
-
-                // Throttle sound playing to avoid rapid repeats
-                this.lastSoundTime = 0;
-                this.soundCooldown = 150; // milliseconds between sound triggers
-
-                this.el.sceneEl.addEventListener('markerFound', (e) => {
-                    this.isVisible = true;
-                });
-
-                this.el.sceneEl.addEventListener('markerLost', (e) => {
-                    this.isVisible = false;
-                    // Stop sounds when marker is lost
-                    this.stopAllSounds();
-                });
-            },
-            update: function () {
-                if (this.data.enabled) {
-                    this.el.sceneEl.addEventListener('onefingermove', this.handleRotation);
-                    this.el.sceneEl.addEventListener('twofingermove', this.handleScale);
-                }
-            },
-            remove: function () {
-                this.el.sceneEl.removeEventListener('onefingermove', this.handleRotation);
-                this.el.sceneEl.removeEventListener('twofingermove', this.handleScale);
-            },
-            
-            // Play sound with cooldown using Howler.js
-            playSound: function (instrumentType) {
-                const now = Date.now();
-                if (now - this.lastSoundTime > this.soundCooldown) {
-                    this.lastSoundTime = now;
-                    if (sounds[instrumentType]) {
-                        sounds[instrumentType].play();
-                    }
-                }
-            },
-            
-            // Stop all sounds using Howler.js
-            stopAllSounds: function () {
-                if (sounds.maracas) {
-                    sounds.maracas.stop();
-                }
-                if (sounds.trumpet) {
-                    sounds.trumpet.stop();
-                }
-            },
-            
-            handleRotation: function (event) {
-                if (this.isVisible) {
-                    this.el.object3D.rotation.y += event.detail.positionChange.x * this.data.rotationFactor;
-                    this.el.object3D.rotation.x += event.detail.positionChange.y * this.data.rotationFactor;
-                    
-                    // Play maracas sound when rotating maracas model
-                    if (this.data.instrumentType === 'maracas') {
-                        // Calculate movement intensity
-                        const movement = Math.abs(event.detail.positionChange.x) + Math.abs(event.detail.positionChange.y);
-                        if (movement > 0.5) { // Only play if movement is significant
-                            this.playSound('maracas');
-                            console.log('🎵 Maracas shake!');
-                        }
-                    }
-                }
-            },
-            handleScale: function (event) {
-                if (this.isVisible) {
-                    this.scaleFactor *= 1 + event.detail.spreadChange / event.detail.startSpread;
-                    this.scaleFactor = Math.min(Math.max(this.scaleFactor, this.data.minScale), this.data.maxScale);
-
-                    this.el.object3D.scale.x = this.scaleFactor * this.initialScale.x;
-                    this.el.object3D.scale.y = this.scaleFactor * this.initialScale.y;
-                    this.el.object3D.scale.z = this.scaleFactor * this.initialScale.z;
-                    
-                    // Play trumpet sound when zooming trumpet model
-                    if (this.data.instrumentType === 'trumpet') {
-                        // Play sound on zoom gesture
-                        const zoomIntensity = Math.abs(event.detail.spreadChange);
-                        if (zoomIntensity > 2) { // Only play if zoom is significant
-                            this.playSound('trumpet');
-                            console.log('🎺 Trumpet blast!');
-                        }
-                    }
-                }
-            },
-        });
-    </script>
-</body>
+    <!-- Using hardcoded data in ar.js - no external config loading -->
+    <script src="/assets/js/ar.js"></script>
+  </body>
 </html>

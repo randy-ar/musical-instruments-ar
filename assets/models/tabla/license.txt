@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tabla (Bayan)
+* source:	https://sketchfab.com/3d-models/tabla-bayan-845a0214c8a74949bd55511b1dc26cc2
+* author:	868nabeel (https://sketchfab.com/868nabeel)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tabla (Bayan)" (https://sketchfab.com/3d-models/tabla-bayan-845a0214c8a74949bd55511b1dc26cc2) by 868nabeel (https://sketchfab.com/868nabeel) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

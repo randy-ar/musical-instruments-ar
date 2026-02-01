@@ -1,4 +1,13 @@
 // ============================================
+// Debug Configuration
+// Set to true to show debugging UI elements
+// ============================================
+const DEBUG_CONFIG = {
+  showPositionControls: false,
+  showPositionDisplay: false,
+};
+
+// ============================================
 // Howler.js Audio Setup
 // ============================================
 
@@ -185,6 +194,8 @@ function adjustPosition(axis, step) {
 
 // Show position control panel
 function showPositionControls() {
+  if (!DEBUG_CONFIG.showPositionControls) return;
+
   const panel = document.getElementById('positionControlPanel');
   if (panel) {
     panel.classList.add('show');
@@ -485,9 +496,9 @@ AFRAME.registerComponent('markerhandler', {
       // Show position control panel
       showPositionControls();
 
-      // Show position display and start tracking
+      // Show position display and start tracking (only if debug enabled)
       const positionDisplay = document.getElementById('modelPositionDisplay');
-      if (positionDisplay) {
+      if (positionDisplay && DEBUG_CONFIG.showPositionDisplay) {
         positionDisplay.classList.remove('hidden');
       }
 

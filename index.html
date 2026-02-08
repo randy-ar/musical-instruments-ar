@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NFT Image Tracking - Dragonite</title>
+    <title>Magic AR - Musical Instruments</title>
 
     <!-- import aframe and then ar.js with image tracking / location based features -->
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
@@ -195,12 +195,12 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
           <h1
             class="text-white tracking-tight text-3xl font-bold leading-tight px-4 text-center pb-3 drop-shadow-sm"
           >
-            Menyiapkan keajaiban musik...
+            Menyiapkan magic card music...
           </h1>
           <p
             class="text-sky-100 text-lg font-medium leading-relaxed px-8 text-center max-w-sm"
           >
-            Siapkan kartu instrumenmu untuk berpetualang!
+            Siapkan kartu instrumenmu untuk bermain musik!
           </p>
         </div>
 
@@ -235,7 +235,7 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
             <p
               class="text-sky-100/90 text-sm font-medium leading-normal text-center italic mt-2"
             >
-              Tips: Gerakkan ponselmu perlahan di sekitar ruangan
+              Tips: Arahkan kamera ke kartu instrumenmu untuk bermain musik!
             </p>
           </div>
         </div>
@@ -584,9 +584,9 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
         <a-entity
           id="saxophoneModel"
           gltf-model="/assets/models/saxophone/scene.gltf"
-          scale="40 40 40"
-          position="0 0 0"
-          rotation="-90 0 0"
+          scale="71.07 71.07 71.07"
+          position="40 70 90"
+          rotation="-106 0 0"
           animation-mixer
           gesture-handler="instrumentType: saxophone"
         ></a-entity>
@@ -605,9 +605,9 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
         <a-entity
           id="accordionModel"
           gltf-model="/assets/models/accordion/scene.gltf"
-          scale="40 40 40"
-          position="0 0 0"
-          rotation="-90 0 0"
+          scale="165 165 165"
+          position="120 360 -160"
+          rotation="-269 0 0"
           animation-mixer
           gesture-handler="instrumentType: accordion"
         ></a-entity>
@@ -626,9 +626,9 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
         <a-entity
           id="celloModel"
           gltf-model="/assets/models/cello/scene.gltf"
-          scale="40 40 40"
-          position="0 0 0"
-          rotation="-90 0 0"
+          scale="143.38 143.38 143.38"
+          position="40 240 -60"
+          rotation="-35 0 0"
           animation-mixer
           gesture-handler="instrumentType: cello"
         ></a-entity>
@@ -647,8 +647,8 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
         <a-entity
           id="harpModel"
           gltf-model="/assets/models/harp/scene.gltf"
-          scale="40 40 40"
-          position="0 0 0"
+          scale="43.08 43.08 43.08"
+          position="20 140 50"
           rotation="-90 0 0"
           animation-mixer
           gesture-handler="instrumentType: harp"
@@ -689,9 +689,9 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
         <a-entity
           id="tablaModel"
           gltf-model="/assets/models/tabla/scene.gltf"
-          scale="40 40 40"
-          position="0 0 0"
-          rotation="-90 0 0"
+          scale="320 320 320"
+          position="130 30 -50"
+          rotation="-88 0 0"
           animation-mixer
           gesture-handler="instrumentType: tabla"
         ></a-entity>
@@ -731,13 +731,119 @@ https://cdn.jsdelivr.net/npm/heroicons-css@0.1.1/heroicons.min.css
         <a-entity
           id="pianikaModel"
           gltf-model="/assets/models/pianika/scene.gltf"
-          scale="40 40 40"
-          position="0 0 0"
-          rotation="-90 0 0"
+          scale="50.24 50.24 50.24"
+          position="40 290 100"
+          rotation="-114 0 0"
           animation-mixer
           gesture-handler="instrumentType: pianika"
         ></a-entity>
       </a-nft>
+
+      <!-- 11. GUITAR -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/guitar/guitar"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="guitarModel"
+          gltf-model="/assets/models/guitar/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: guitar"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 12. PIANO -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/piano/piano"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="pianoModel"
+          gltf-model="/assets/models/piano/scene.gltf"
+          scale="40 40 40"
+          position="0 0 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: piano"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 13. DRUMS -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/drums/drums"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="drumsModel"
+          gltf-model="/assets/models/drums/scene.gltf"
+          scale="133.79 133.79 133.79"
+          position="50 100 40"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: drums"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 14. FRENCH HORN -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/french-horn/french-horn"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="frenchHornModel"
+          gltf-model="/assets/models/french-horn/scene.gltf"
+          scale="20 20 20"
+          position="0 20 0"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: french-horn"
+        ></a-entity>
+      </a-nft>
+
+      <!-- 15. VIOLIN -->
+      <a-nft
+        markerhandler
+        type="nft"
+        url="/assets/images/violin/violin"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance=".01"
+        smoothThreshold="5"
+      >
+        <a-entity
+          id="violinModel"
+          gltf-model="/assets/models/violin/scene.gltf"
+          scale="6 6 6"
+          position="150 340 50"
+          rotation="-90 0 0"
+          animation-mixer
+          gesture-handler="instrumentType: violin"
+        ></a-entity>
+      </a-nft>
+      
 
       <!-- Camera -->
       <a-entity camera></a-entity>

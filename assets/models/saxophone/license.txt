@@ -1,11 +1,11 @@
 Model Information:
-* title:	Alto Saxophone
-* source:	https://sketchfab.com/3d-models/alto-saxophone-05fdf0f392af413189afb260821fcc22
-* author:	Tesseract (https://sketchfab.com/Jonivan.Carter)
+* title:	Saxophone
+* source:	https://sketchfab.com/3d-models/saxophone-a838f6c330594956ada7df8d75bbc297
+* author:	Flozza_Bee (https://sketchfab.com/Flozza_Bee)
 
 Model License:
-* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
-* requirements:	Author must be credited. Commercial use is allowed.
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
 
 If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
-This work is based on "Alto Saxophone" (https://sketchfab.com/3d-models/alto-saxophone-05fdf0f392af413189afb260821fcc22) by Tesseract (https://sketchfab.com/Jonivan.Carter) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+This work is based on "Saxophone" (https://sketchfab.com/3d-models/saxophone-a838f6c330594956ada7df8d75bbc297) by Flozza_Bee (https://sketchfab.com/Flozza_Bee) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)

@@ -3,142 +3,86 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 2134,
+      "count": 2767,
       "max": [
-        -574940.375,
-        447600.75,
-        604834.375
+        1.5052189826965332,
+        0.5517200231552124,
+        5.306241989135742
       ],
       "min": [
-        -868071.4375,
-        -6436.265625,
-        374666.34375
+        -0.8072469830513,
+        -0.3532640039920807,
+        0.10226300358772278
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
-      "byteOffset": 25608,
+      "byteOffset": 33204,
       "componentType": 5126,
-      "count": 2134,
+      "count": 2767,
       "max": [
-        0.9987791180610657,
         1.0,
-        0.9993212223052979
+        1.0,
+        1.0
       ],
       "min": [
-        -0.9996089339256287,
         -1.0,
-        -0.9995725750923157
+        -1.0,
+        -1.0
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 2134,
+      "count": 2767,
       "max": [
-        1.0277999639511108,
-        -0.0
+        0.9778739809989929,
+        0.9919549822807312
       ],
       "min": [
-        -0.027799999341368675,
-        -1.0
+        0.036765001714229584,
+        0.0029299999587237835
       ],
       "type": "VEC2"
     },
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 5928,
-      "type": "SCALAR"
-    },
-    {
-      "bufferView": 2,
-      "byteOffset": 51216,
-      "componentType": 5126,
-      "count": 3388,
-      "max": [
-        -618412.5,
-        404242.75,
-        565391.5
-      ],
-      "min": [
-        -849353.25,
-        36050.671875,
-        389971.34375
-      ],
-      "type": "VEC3"
-    },
-    {
-      "bufferView": 2,
-      "byteOffset": 91872,
-      "componentType": 5126,
-      "count": 3388,
-      "max": [
-        0.9949820041656494,
-        0.9937735795974731,
-        0.9903116822242737
-      ],
-      "min": [
-        -0.9949820041656494,
-        -0.9937735795974731,
-        -0.9903116822242737
-      ],
-      "type": "VEC3"
-    },
-    {
-      "bufferView": 1,
-      "byteOffset": 17072,
-      "componentType": 5126,
-      "count": 3388,
-      "max": [
-        0.9721999764442444,
-        -0.0
-      ],
-      "min": [
-        -0.027799999341368675,
-        -1.0
-      ],
-      "type": "VEC2"
-    },
-    {
-      "bufferView": 0,
-      "byteOffset": 23712,
-      "componentType": 5125,
-      "count": 14256,
+      "count": 4110,
       "type": "SCALAR"
     }
   ],
   "asset": {
     "extras": {
-      "author": "Mylom (https://sketchfab.com/Mylom)",
+      "author": "neutralize (https://sketchfab.com/neutralize)",
       "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
-      "source": "https://sketchfab.com/3d-models/harp-b2f57e7700cd432e93701e7c7a7100f9",
-      "title": "harp"
+      "source": "https://sketchfab.com/3d-models/harp-5bb8c4508ba9416187fd61693313e391",
+      "title": "Harp"
     },
-    "generator": "Sketchfab-16.64.0",
+    "generator": "Sketchfab-12.66.0",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 80736,
+      "byteLength": 16440,
       "name": "floatBufferViews",
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 44176,
-      "byteOffset": 80736,
+      "byteLength": 22136,
+      "byteOffset": 16440,
       "byteStride": 8,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 132528,
-      "byteOffset": 124912,
+      "byteLength": 66408,
+      "byteOffset": 38576,
       "byteStride": 12,
       "name": "floatBufferViews",
       "target": 34962
@@ -146,62 +90,24 @@
   ],
   "buffers": [
     {
-      "byteLength": 257440,
+      "byteLength": 104984,
       "uri": "scene.bin"
     }
   ],
-  "extensionsUsed": [
-    "KHR_materials_specular"
-  ],
   "images": [
     {
-      "uri": "textures/13___Default_baseColor.jpeg"
+      "uri": "textures/Harp_mat1_baseColor.png"
     }
   ],
   "materials": [
     {
       "doubleSided": true,
-      "extensions": {
-        "KHR_materials_specular": {
-          "specularColorFactor": [
-            1.0,
-            1.0,
-            1.0
-          ],
-          "specularFactor": 0.0
-        }
-      },
-      "name": "13___Default",
+      "name": "Harp_mat1",
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
         },
-        "metallicFactor": 0.0,
-        "roughnessFactor": 0.0
-      }
-    },
-    {
-      "doubleSided": true,
-      "extensions": {
-        "KHR_materials_specular": {
-          "specularColorFactor": [
-            1.0,
-            1.0,
-            1.0
-          ],
-          "specularFactor": 0.0
-        }
-      },
-      "name": "14___Default",
-      "pbrMetallicRoughness": {
-        "baseColorFactor": [
-          0.979986380953846,
-          0.960382378165569,
-          0.960382378165569,
-          1.0
-        ],
-        "metallicFactor": 0.0,
-        "roughnessFactor": 0.969948
+        "metallicFactor": 0.0
       }
     }
   ],
@@ -217,21 +123,6 @@
           },
           "indices": 3,
           "material": 0,
-          "mode": 4
-        }
-      ]
-    },
-    {
-      "name": "Object_1",
-      "primitives": [
-        {
-          "attributes": {
-            "NORMAL": 5,
-            "POSITION": 4,
-            "TEXCOORD_0": 6
-          },
-          "indices": 7,
-          "material": 1,
           "mode": 4
         }
       ]
@@ -266,46 +157,11 @@
       "children": [
         2
       ],
-      "name": "root"
-    },
-    {
-      "children": [
-        3
-      ],
-      "matrix": [
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        2.220446049250313e-16,
-        1.0,
-        0.0,
-        0.0,
-        -1.0,
-        2.220446049250313e-16,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "name": "GLTF_SceneRootNode"
-    },
-    {
-      "children": [
-        4,
-        5
-      ],
-      "name": "node-0_0"
+      "name": "Harp.obj.cleaner.materialmerger.gles"
     },
     {
       "mesh": 0,
-      "name": "Object_4"
-    },
-    {
-      "mesh": 1,
-      "name": "Object_5"
+      "name": "Object_2"
     }
   ],
   "samplers": [

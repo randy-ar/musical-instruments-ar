@@ -81,12 +81,52 @@ const sounds = {
     onloaderror: (id, err) => console.error('Tamborine load error:', err),
   }),
   pianika: new Howl({
-    src: ['/assets/sounds/piano/piano.mp3'], // Using piano sound for pianika
+    src: ['/assets/sounds/pianika/pianika.mp3'], // Using piano sound for pianika
     volume: 1.0,
     loop: true,
     preload: true,
     onload: () => console.log('🎹 Pianika sound loaded'),
     onloaderror: (id, err) => console.error('Pianika load error:', err),
+  }),
+  guitar: new Howl({
+    src: ['/assets/sounds/guitar/guitar.mp3'],
+    volume: 1.0,
+    loop: true,
+    preload: true,
+    onload: () => console.log('🎸 Guitar sound loaded'),
+    onloaderror: (id, err) => console.error('Guitar load error:', err),
+  }),
+  piano: new Howl({
+    src: ['/assets/sounds/piano/piano.mp3'],
+    volume: 1.0,
+    loop: true,
+    preload: true,
+    onload: () => console.log('🎹 Piano sound loaded'),
+    onloaderror: (id, err) => console.error('Piano load error:', err),
+  }),
+  drums: new Howl({
+    src: ['/assets/sounds/drums/drums.mp3'],
+    volume: 1.0,
+    loop: true,
+    preload: true,
+    onload: () => console.log('🥁 Drums sound loaded'),
+    onloaderror: (id, err) => console.error('Drums load error:', err),
+  }),
+  'french-horn': new Howl({
+    src: ['/assets/sounds/french-horn/french-horn.mp3'],
+    volume: 1.0,
+    loop: true,
+    preload: true,
+    onload: () => console.log('🎺 French Horn sound loaded'),
+    onloaderror: (id, err) => console.error('French Horn load error:', err),
+  }),
+  violin: new Howl({
+    src: ['/assets/sounds/violin/violin.mp3'],
+    volume: 1.0,
+    loop: true,
+    preload: true,
+    onload: () => console.log('🎻 Violin sound loaded'),
+    onloaderror: (id, err) => console.error('Violin load error:', err),
   }),
 };
 
@@ -150,6 +190,36 @@ const instrumentInfo = {
     displayName: 'PIANIKA',
     family: 'Keluarga Keyboard',
     playLabel: 'Tahan untuk Main!',
+    interactionType: 'hold',
+  },
+  guitar: {
+    displayName: 'GUITAR',
+    family: 'Keluarga Petik',
+    playLabel: 'Ketuk untuk Petik!',
+    interactionType: 'tap',
+  },
+  piano: {
+    displayName: 'PIANO',
+    family: 'Keluarga Keyboard',
+    playLabel: 'Tahan untuk Main!',
+    interactionType: 'hold',
+  },
+  drums: {
+    displayName: 'DRUMS',
+    family: 'Keluarga Perkusi',
+    playLabel: 'Ketuk untuk Pukul!',
+    interactionType: 'tap',
+  },
+  'french-horn': {
+    displayName: 'FRENCH HORN',
+    family: 'Keluarga Tiup Logam',
+    playLabel: 'Tahan untuk Tiup!',
+    interactionType: 'hold',
+  },
+  violin: {
+    displayName: 'VIOLIN',
+    family: 'Keluarga Gesek',
+    playLabel: 'Tahan untuk Gesek!',
     interactionType: 'hold',
   },
 };
@@ -503,7 +573,7 @@ AFRAME.registerComponent('markerhandler', {
       }
 
       // Get the model element
-      const model = document.getElementById(modelId);
+      const model = document.getElementById(currentActiveModel);
 
       // Start tracking position
       if (model) {
